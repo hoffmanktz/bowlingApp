@@ -22,8 +22,7 @@ var firstRoll = function() {
 	prompt.question("Are you ready to roll, " + playerOneName + "?" , (rollPlz) => {
 		if (rollPlz == "roll") {
 			console.log("Rolling now!");
-			roll1 = 10;
-			// Math.floor(Math.random() * 10) + 1;
+			roll1 = Math.floor(Math.random() * 10) + 1;
 				if (roll1 == 10) {
 					console.log("Strike!!!");
 					roll2 = 0;
@@ -46,6 +45,10 @@ var secondRoll = function() {
 			roll2 = Math.floor(Math.random() * (10-roll1+1));
 			console.log("Your 2nd roll: " + roll2);
 			frameScore = roll1+roll2;
+
+			if (frameScore==10) {
+				spareScore();
+			}
 			endTurn();
 		} else {
 			secondRoll();
@@ -55,11 +58,12 @@ var secondRoll = function() {
 
 var strikeScore = function() {
 	frameScore=30;
-	console.log(frameScore);
+	
 };
 
 var spareScore = function() {
 	frameScore=20;
+	console.log(frameScore);
 };
 
 var endTurn = function() {
