@@ -5,10 +5,16 @@ var prompt = readline.createInterface({
     output: process.stdout
 });
 
+var Frame = function(firstRoll, secondRoll) {
+	this.firstRoll = firstRoll;
+	this.secondRoll = secondRoll;
+};
+
 var allRounds = [];
 var playerOneName;
 var roll1;
 var roll2;
+var scoreToPush;
 
 var firstRoll = function() {
 	prompt.question("Are you ready to roll, " + playerOneName + "?" , (rollPlz) => {
@@ -46,6 +52,10 @@ var endTurn = function() {
 
 	console.log("Your rolls: " + roll1 + " " + roll2);
 
+	scoreToPush = new Frame(roll1, roll2);
+	allRounds.push(scoreToPush);
+
+	console.log(allRounds);
 };
 
 prompt.question("What is your name?", (inputP1Name) => {
