@@ -5,25 +5,29 @@ var prompt = readline.createInterface({
     output: process.stdout
 });
 
-var Frame = function(firstRoll, secondRoll) {
+var Frame = function(firstRoll, secondRoll, score) {
 	this.firstRoll = firstRoll;
 	this.secondRoll = secondRoll;
+	this.score= score;
 };
 
 var allRounds = [];
 var playerOneName;
 var roll1;
 var roll2;
-var scoreToPush;
+var rollToPush;
+var frameScore = 0;
 
 var firstRoll = function() {
 	prompt.question("Are you ready to roll, " + playerOneName + "?" , (rollPlz) => {
 		if (rollPlz == "roll") {
 			console.log("Rolling now!");
-			roll1 = Math.floor(Math.random() * 10) + 1;
+			roll1 = 10;
+			// Math.floor(Math.random() * 10) + 1;
 				if (roll1 == 10) {
 					console.log("Strike!!!");
 					roll2 = 0;
+					strikeScore();
 					endTurn();
 				} else {
 			console.log("Your 1st roll: " + roll1); 
@@ -41,6 +45,7 @@ var secondRoll = function() {
 			console.log("Rolling now!");
 			roll2 = Math.floor(Math.random() * (10-roll1+1));
 			console.log("Your 2nd roll: " + roll2);
+			frameScore = roll1+roll2;
 			endTurn();
 		} else {
 			secondRoll();
@@ -48,10 +53,19 @@ var secondRoll = function() {
 	});
 };
 
+var strikeScore = function() {
+	frameScore=30;
+	console.log(frameScore);
+};
+
+var spareScore = function() {
+	frameScore=20;
+};
+
 var endTurn = function() {
 	console.log("Your rolls: " + roll1 + " " + roll2);
-	scoreToPush = new Frame(roll1, roll2);
-	allRounds.push(scoreToPush);
+	rollToPush = new Frame(roll1, roll2, frameScore);
+	allRounds.push(rollToPush);
 	console.log(allRounds);
 };
 
