@@ -17,6 +17,7 @@ var roll1;
 var roll2;
 var rollToPush;
 var frameScore = 0;
+var overallScore=0;
 
 var firstRoll = function() {
 	prompt.question("Are you ready to roll, " + playerOneName + "?" , (rollPlz) => {
@@ -63,17 +64,40 @@ var strikeScore = function() {
 
 var spareScore = function() {
 	frameScore=20;
-	console.log(frameScore);
+	console.log("You got a SPARE!!!");
+};
+
+var scoreTotal = function() {
+	for (var i =0; i<allRounds.length; i++) {
+		overallScore = overallScore + allRounds[i].score;
+	}
+	console.log(overallScore);
 };
 
 var endTurn = function() {
 	console.log("Your rolls: " + roll1 + " " + roll2);
 	rollToPush = new Frame(roll1, roll2, frameScore);
 	allRounds.push(rollToPush);
+
 	console.log(allRounds);
+	console.log(overallScore);
+	
+	firstRoll();
 };
 
 prompt.question("What is your name?", (inputP1Name) => {
 	playerOneName = inputP1Name;
 	firstRoll();
 });
+
+var endGame = function() {
+	scoreTotal();
+};
+var sleep = function(milliseconds) {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+      if ((new Date().getTime() - start) > milliseconds){
+        break;
+      }
+    }
+};
