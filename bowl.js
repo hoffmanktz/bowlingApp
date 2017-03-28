@@ -20,7 +20,7 @@ var firstRoll = function() {
 	prompt.question("Are you ready to roll, " + playerOneName + "?" , (rollPlz) => {
 		if (rollPlz == "roll") {
 			console.log("Rolling now!");
-			roll1 = 9;
+			roll1 = Math.floor(Math.random() * 10) + 1;
 				if (roll1 == 10) {
 					console.log("Strike!!!");
 					roll2 = 0;
@@ -49,12 +49,9 @@ var secondRoll = function() {
 };
 
 var endTurn = function() {
-
 	console.log("Your rolls: " + roll1 + " " + roll2);
-
 	scoreToPush = new Frame(roll1, roll2);
 	allRounds.push(scoreToPush);
-
 	console.log(allRounds);
 };
 
