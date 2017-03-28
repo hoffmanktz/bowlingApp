@@ -82,14 +82,22 @@ var endTurn = function() {
 	console.log(allRounds);
 	console.log(overallScore);
 	
-	firstRoll();
+	checkFrameLength();
 };
 
 prompt.question("What is your name?", (inputP1Name) => {
 	playerOneName = inputP1Name;
 	firstRoll();
 });
-
+//check for amount in array, if == 10, then go to end game to quit
+var checkFrameLength = function() {
+	if (allRounds.length ==10) {
+		endGame();
+	}
+	else {
+		firstRoll();
+	}
+}
 var endGame = function() {
 	scoreTotal();
 };
