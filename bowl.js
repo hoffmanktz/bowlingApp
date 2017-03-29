@@ -16,10 +16,12 @@ var rollPlzLC;
 var rollPlzLC2;
 var totalSoFar;
 
-var Frame = function(firstRoll, secondRoll, score) {
+var Frame = function(firstRoll, secondRoll, score, wasStrike, wasSpare) {
 	this.firstRoll = firstRoll;
 	this.secondRoll = secondRoll;
-	this.score= score;
+	this.score = score;
+	this.wasStrike = wasStrike;
+	this.wasSpare = wasSpare;
 };
 
 var exit = function(){
@@ -91,12 +93,12 @@ askName();
 var firstRoll = function() {
 	sleep(500);
     console.log("When you're ready to get your roll on, type 'roll' and hit enter!\nTo exit at any time, type 'exit' and hit enter.");
-    sleep(1000);
+    sleep(700);
     prompt.question("Are you ready to roll, " + playerOneName + "? " , (rollPlz) => {
     	rollPlzLC = rollPlz.toLowerCase();
         if (rollPlzLC == "roll") {
         	wipe();
-            console.log("Rolling now!");
+            console.log("Rolling now! Wait for it...");
             sleep(2000);
             roll1 = Math.floor(Math.random() * 10) + 1;
                 if (roll1 == 10) {
@@ -122,12 +124,12 @@ var secondRoll = function() {
 	console.log("****");
 	sleep(500);
 	console.log("When you're ready to get your roll on, type 'roll' and hit enter!");
-	sleep(1000);
+	sleep(700);
 	prompt.question("Are you ready to roll again, " + playerOneName + "? " , (rollPlz2) => {
 		rollPlzLC2 = rollPlz2.toLowerCase();
 		if (rollPlzLC2 == "roll") {
 			wipe();
-			console.log("Rolling now!");
+			console.log("Rolling now! Wait for it...");
 			sleep(2000);
 			roll2 = Math.floor(Math.random() * (10-roll1+1));
 			console.log("You knocked down " + roll2 + " pin(s) on the second roll!");
