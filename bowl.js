@@ -106,12 +106,10 @@ var firstRoll = function() {
                     roll2 = 0;
                     strikeScore();
                     endTurn();
-                } else if (roll1==0) {
+                } else if (roll1 == 0) {
                 	console.log("Gutter Ball! Wah-wah-wah......");
                 	secondRoll();
-                } 
-
-                else {
+                } else {
             console.log("You knocked down " + roll1 + " pin(s) on the first roll!"); 
             secondRoll();
             }
@@ -142,11 +140,9 @@ var secondRoll = function() {
 			if (frameScore==10) {
 				spareScore();
 			} else if (roll2==0) {
-                	console.log("Gutter Ball! Wah-wah-wah......");
+            	console.log("Gutter Ball! Wah-wah-wah......");
                 	
-                } 
-			endTurn();
-			
+            } endTurn();
 			} else {
 				secondRoll();
 		}
@@ -158,7 +154,7 @@ var strikeScore = function() {
 };
 
 var spareScore = function() {
-	frameScore=20;
+	frameScore=10;
 	console.log("You got a SPARE!!!");
 };
 
@@ -190,6 +186,9 @@ var endTurn = function() {
 	}
 	allRounds.push(rollToPush);
 	console.log("*****");
+	if (allRounds.length > 1 && allRounds[allRounds.length-2].wasSpare == true) {
+		allRounds[allRounds.length-2].score = allRounds[allRounds.length-2].score+roll1;
+	}
 	for (var i=0; i <= allRounds.length -1; i++) {
 		console.log("Your score for round " + parseInt(i+1) + " is " + allRounds[i].score + ". Strike?: " + allRounds[i].wasStrike + " Spare?: " + allRounds[i].wasSpare);
 	
