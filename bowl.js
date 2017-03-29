@@ -100,7 +100,7 @@ var firstRoll = function() {
         	wipe();
             console.log("Rolling now! Wait for it...");
             sleep(2000);
-            roll1 = Math.floor(Math.random() * 10) + 1;
+            roll1 = 10; //Math.floor(Math.random() * 10) + 1;
                 if (roll1 == 10) {
                     console.log("Strike!!!");
                     roll2 = 0;
@@ -114,7 +114,7 @@ var firstRoll = function() {
             secondRoll();
             }
             //exit
-        } else if( rollPlz == "exit"){
+        } else if(rollPlz == "exit"){
             exit();
         } else {
         	wipe();
@@ -150,7 +150,7 @@ var secondRoll = function() {
 };
 
 var strikeScore = function() {
-	frameScore=30;
+	frameScore=10;
 };
 
 var spareScore = function() {
@@ -186,14 +186,22 @@ var endTurn = function() {
 	}
 	allRounds.push(rollToPush);
 	console.log("*****");
+
+
 	if (allRounds.length > 1 && allRounds[allRounds.length-2].wasSpare == true) {
 		allRounds[allRounds.length-2].score = allRounds[allRounds.length-2].score+roll1;
 	}
+
+	if (allRounds.length > 1 && allRounds[allRounds.length-2].wasStrike == true) {
+		allRounds[allRounds.length-2].score = allRounds[allRounds.length-2].score+roll1+roll2;
+	}
+	if (allRounds.length > 2 && allRounds[allRounds.length-2].wasStrike == true && allRounds[allRounds.length-3].wasStrike == true) {
+		allRounds[allRounds.length-3].score = allRounds[allRounds.length-3].score+roll1+roll2;
+	}
 	for (var i=0; i <= allRounds.length -1; i++) {
-		console.log("Your score for round " + parseInt(i+1) + " is " + allRounds[i].score + ". Strike?: " + allRounds[i].wasStrike + " Spare?: " + allRounds[i].wasSpare);
-	
-}
-scoreTotal2();
+		console.log("Your score for round " + parseInt(i+1) + " is " + allRounds[i].score + ". Strike?: " + allRounds[i].wasStrike + " Spare?: " + allRounds[i].wasSpare);	
+	}
+	scoreTotal2();
 	checkFrameLength();
 };
 
