@@ -5,12 +5,6 @@ var prompt = readline.createInterface({
     output: process.stdout
 });
 
-var Frame = function(firstRoll, secondRoll, score) {
-	this.firstRoll = firstRoll;
-	this.secondRoll = secondRoll;
-	this.score= score;
-};
-
 var allRounds = [];
 var playerOneName;
 var roll1;
@@ -22,17 +16,88 @@ var rollPlzLC;
 var rollPlzLC2;
 var totalSoFar;
 
+var Frame = function(firstRoll, secondRoll, score) {
+	this.firstRoll = firstRoll;
+	this.secondRoll = secondRoll;
+	this.score= score;
+};
+
 var exit = function(){
+	wipe();
+	sleep(500);
     console.log("Thanks for playing!!! Roll out.");
     process.exit();
 };
 
+var wipe = function () {
+  return process.stdout.write('\033c');
+};
+
+var askName = function(){
+	prompt.question("What is your name? ", (inputP1Name) => {
+		playerOneName = validateName(inputP1Name);
+		if (inputP1Name.length > 1 && inputP1Name.length < 16) {
+			firstRoll();
+		}
+	});
+};
+
+var validateName = function(x) {
+	if (x.length > 1 && x.length < 16) {
+		return x;
+	} else {
+		console.log("Please use 2-15 characters");
+		askName();
+	}
+};
+
+var askName = function(){
+	sleep(1500);
+	prompt.question("Welcome! What is your name? ", (inputP1Name) => {
+		playerOneName = validateName(inputP1Name);
+		if (inputP1Name.length > 1 && inputP1Name.length < 16) {
+			wipe();
+			firstRoll();
+		}
+	});
+};
+                                             
+var art1 = function() {
+	wipe();
+console.log(
+ "                                              \n" +
+ "                                 .-.\n" +
+ "                                 \\ /      .-.\n" +
+ "                                 |_|  .-. \\ /\n" +
+ "                                 |=|  \\ / |_|\n" +
+ "                                /   \\ |_| |=|\n" +
+ "                               / (@) \\|=|/   \\\n" +
+ "                          ____ |     /   \\@)  \\\n" +
+ "                        .'    '.    / (@) \\   |\n" +
+ "                       / #      \\   |     |   |\n" +
+ "                       |    o o |'='|     |  /\n" +
+ "                       \\     o  /    \\   /'='\n" +
+ "                        '.____.'      '='\n" +
+ "                                            \n" +
+ " _____  __ __  _____  _____  _____  _____  _____  __  __  ____   ___  ___ \n" +
+ "/  ___>/  |  \\/  _  \\/   __\\/  _  \\/  _  \\/  _  \\/   /  \\/  _/  /   \\/   \\\n" +
+ "|___  ||  |  ||   __/|   __||  _  <|  _  <|  |  ||  /\\  ||  |---\\___/\\___/\n" +
+ "<_____/\\_____/\\__/   \\_____/\\__|\\_/\\_____/\\_____/\\__/\\__/\\_____/<___><___>\n" +
+ "                                                                          \n" 
+);
+askName();
+};
+
 var firstRoll = function() {
+	sleep(500);
     console.log("When you're ready to get your roll on, type 'roll' and hit enter!\nTo exit at any time, type 'exit' and hit enter.");
+    sleep(1000);
     prompt.question("Are you ready to roll, " + playerOneName + "? " , (rollPlz) => {
     	rollPlzLC = rollPlz.toLowerCase();
         if (rollPlzLC == "roll") {
+        	wipe();
             console.log("Rolling now!");
+            sleep(2000);
             roll1 = Math.floor(Math.random() * 10) + 1;
                 if (roll1 == 10) {
                     console.log("Strike!!!");
@@ -40,14 +105,14 @@ var firstRoll = function() {
                     strikeScore();
                     endTurn();
                 } else {
-            console.log("Your 1st roll: " + roll1); 
+            console.log("You knocked down " + roll1 + " pin(s) on the first roll!"); 
             secondRoll();
             }
             //exit
         } else if( rollPlz == "exit"){
             exit();
-        }
-        else {
+        } else {
+        	wipe();
             firstRoll();
         }
     });
@@ -55,21 +120,25 @@ var firstRoll = function() {
 
 var secondRoll = function() {
 	console.log("****");
+	sleep(500);
 	console.log("When you're ready to get your roll on, type 'roll' and hit enter!");
+	sleep(1000);
 	prompt.question("Are you ready to roll again, " + playerOneName + "? " , (rollPlz2) => {
 		rollPlzLC2 = rollPlz2.toLowerCase();
 		if (rollPlzLC2 == "roll") {
+			wipe();
 			console.log("Rolling now!");
+			sleep(2000);
 			roll2 = Math.floor(Math.random() * (10-roll1+1));
-			console.log("Your 2nd roll: " + roll2);
+			console.log("You knocked down " + roll2 + " pin(s) on the second roll!");
 			frameScore = roll1+roll2;
-
 			if (frameScore==10) {
 				spareScore();
-			}
+			} 
 			endTurn();
+			
 			} else {
-			secondRoll();
+				secondRoll();
 		}
 	});
 };
@@ -84,10 +153,10 @@ var spareScore = function() {
 };
 
 var scoreTotal = function() {
-	for (var i =0; i<allRounds.length; i++) {
+	for (var i = 0; i < allRounds.length; i++) {
 		overallScore = overallScore + allRounds[i].score;
 	}
-	console.log(overallScore);
+	console.log("Your final score is: " + overallScore);
 };
 
 var scoreTotal2 = function(x) {
@@ -100,41 +169,23 @@ var scoreTotal2 = function(x) {
 };
 
 var endTurn = function() {
+	sleep(1500);
 	console.log("Your rolls: " + roll1 + " " + roll2);
 	rollToPush = new Frame(roll1, roll2, frameScore);
 	allRounds.push(rollToPush);
 	console.log("*****");
 	for (var i=0; i <= allRounds.length -1; i++) {
-	console.log("Your score for round " + parseInt(i+1) + " is " + allRounds[i].score);
+		console.log("Your score for round " + parseInt(i+1) + " is " + allRounds[i].score);
 	
 }
 scoreTotal2();
 	checkFrameLength();
 };
 
-var validateName = function(x) {
-	if (x.length > 1 && x.length < 16) {
-		return x;
-	} else {
-		console.log("Please use 2-15 characters");
-		askName();
-	}
-};
-
-var askName = function(){
-	prompt.question("What is your name? ", (inputP1Name) => {
-	playerOneName = validateName(inputP1Name);
-	firstRoll();
-});
-
-};
-
-//check for amount in array, if == 10, then go to end game to quit
 var checkFrameLength = function() {
 	if (allRounds.length ==10) {
 		endGame();
-	}
-	else {
+	} else {
 		firstRoll();
 	}
 };
@@ -153,4 +204,4 @@ var sleep = function(milliseconds) {
     }
 };
 
-askName();
+art1();
