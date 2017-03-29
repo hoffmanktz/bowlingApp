@@ -1,3 +1,11 @@
+//updated scoretotal
+//added goal set
+//added checkgoal
+//added variables at top
+//added playAgain function
+
+
+
 var readline = require('readline');
 
 var prompt = readline.createInterface({
@@ -15,6 +23,9 @@ var overallScore=0;
 var rollPlzLC;
 var rollPlzLC2;
 var totalSoFar;
+var playerGoal=0;
+var goalSet;
+
 
 var Frame = function(firstRoll, secondRoll, score, wasStrike, wasSpare) {
 	this.firstRoll = firstRoll;
@@ -39,10 +50,12 @@ var askName = function(){
 	prompt.question("What is your name? ", (inputP1Name) => {
 		playerOneName = validateName(inputP1Name);
 		if (inputP1Name.length > 1 && inputP1Name.length < 16) {
-			firstRoll();
+			playerSetGoal();
+			
 		}
 	});
 };
+
 
 var validateName = function(x) {
 	if (x.length > 1 && x.length < 16) {
@@ -53,15 +66,40 @@ var validateName = function(x) {
 	}
 };
 
-var askName = function(){
-	sleep(1500);
-	prompt.question("Welcome! What is your name? ", (inputP1Name) => {
-		playerOneName = validateName(inputP1Name);
-		if (inputP1Name.length > 1 && inputP1Name.length < 16) {
-			wipe();
+var playerSetGoal = function() {
+	prompt.question("Would you like to set a goal for yourself? Type 'yes' or 'no.' ", (inputGoal) => {
+		playerAnswer = inputGoal;
+		playerAnswer = playerAnswer.toLowerCase();
+		
+		if ( playerAnswer=="yes") {
+			prompt.question("Enter a goal between 100-300? ", (goal) => {
+				playerGoal = goal;
+				goalSet=true;
+				checkGoal();
+				});
+			
+		
+	}	else if (playerAnswer=="no") {
 			firstRoll();
+		
+	}
+		else {
+			console.log("Please type yes or no");
+			playerSetGoal();
 		}
 	});
+};
+
+var checkGoal = function() {
+	if (playerGoal>100 && playerGoal<300) {
+				console.log("Let's get rolling!");
+				sleep(800);
+				firstRoll();
+				} else {
+					console.log("You must choose a number between 100-300");
+					playerSetGoal();
+				}
+
 };
                                              
 var art1 = function() {
@@ -100,21 +138,23 @@ var firstRoll = function() {
         	wipe();
             console.log("Rolling now! Wait for it...");
             sleep(2000);
-            roll1 = 10; //Math.floor(Math.random() * 10) + 1;
+            roll1 = Math.floor(Math.random() * 10) + 1;
                 if (roll1 == 10) {
                     console.log("Strike!!!");
                     roll2 = 0;
                     strikeScore();
                     endTurn();
-                } else if (roll1 == 0) {
+                } else if (roll1==0) {
                 	console.log("Gutter Ball! Wah-wah-wah......");
                 	secondRoll();
-                } else {
+                } 
+
+                else {
             console.log("You knocked down " + roll1 + " pin(s) on the first roll!"); 
             secondRoll();
             }
             //exit
-        } else if(rollPlz == "exit"){
+        } else if( rollPlz == "exit"){
             exit();
         } else {
         	wipe();
@@ -140,9 +180,11 @@ var secondRoll = function() {
 			if (frameScore==10) {
 				spareScore();
 			} else if (roll2==0) {
-            	console.log("Gutter Ball! Wah-wah-wah......");
+                	console.log("Gutter Ball! Wah-wah-wah......");
                 	
-            } endTurn();
+                } 
+			endTurn();
+			
 			} else {
 				secondRoll();
 		}
@@ -150,11 +192,11 @@ var secondRoll = function() {
 };
 
 var strikeScore = function() {
-	frameScore=10;
+	frameScore=30;
 };
 
 var spareScore = function() {
-	frameScore=10;
+	frameScore=20;
 	console.log("You got a SPARE!!!");
 };
 
@@ -163,6 +205,15 @@ var scoreTotal = function() {
 		overallScore = overallScore + allRounds[i].score;
 	}
 	console.log("Your final score is: " + overallScore);
+	if (overallScore>=playerGoal && goalSet==true) {
+		console.log("Congrats on hitting your goal!");
+	} else if (overallScore<playerGoal && goalSet==true){
+		console.log("Sorry, you didn't do so hot. We still think you are a good person.");
+	} else {
+		console.log("Congrats!");
+	}
+
+	playAgain();
 };
 
 var scoreTotal2 = function(x) {
@@ -186,22 +237,11 @@ var endTurn = function() {
 	}
 	allRounds.push(rollToPush);
 	console.log("*****");
-
-
-	if (allRounds.length > 1 && allRounds[allRounds.length-2].wasSpare == true) {
-		allRounds[allRounds.length-2].score = allRounds[allRounds.length-2].score+roll1;
-	}
-
-	if (allRounds.length > 1 && allRounds[allRounds.length-2].wasStrike == true) {
-		allRounds[allRounds.length-2].score = allRounds[allRounds.length-2].score+roll1+roll2;
-	}
-	if (allRounds.length > 2 && allRounds[allRounds.length-2].wasStrike == true && allRounds[allRounds.length-3].wasStrike == true) {
-		allRounds[allRounds.length-3].score = allRounds[allRounds.length-3].score+roll1+roll2;
-	}
 	for (var i=0; i <= allRounds.length -1; i++) {
-		console.log("Your score for round " + parseInt(i+1) + " is " + allRounds[i].score + ". Strike?: " + allRounds[i].wasStrike + " Spare?: " + allRounds[i].wasSpare);	
-	}
-	scoreTotal2();
+		console.log("Your score for round " + parseInt(i+1) + " is " + allRounds[i].score + ". Strike?: " + allRounds[i].wasStrike + " Spare?: " + allRounds[i].wasSpare);
+	
+}
+scoreTotal2();
 	checkFrameLength();
 };
 
@@ -215,7 +255,7 @@ var checkFrameLength = function() {
 
 var endGame = function() {
 	scoreTotal();
-	prompt.close();
+	//prompt.close();
 };
 
 var sleep = function(milliseconds) {
@@ -225,6 +265,23 @@ var sleep = function(milliseconds) {
         break;
       }
     }
+};
+var playAgain = function () {
+     sleep(700);
+     prompt.question("Would you like to play again? Type 'yes' to play again or 'no' to exit." , (wantToPlayAgain) => {
+        playerInput = wantToPlayAgain;
+        playerInput = playerInput.toLowerCase();
+        if (playerInput == "yes") {
+            wipe();
+            
+            playerSetGoal();
+        } else if (playerInput == "no") {
+            exit();
+        } else {
+            wipe();
+            playAgain();
+        }
+    });
 };
 
 art1();
